@@ -43,7 +43,7 @@ Patch2:		db-5.1.19-tcl-link.patch
 Patch3:		arm-thumb-mutex_db5.patch
 Patch4:		db-18.1.25-openssl-1.1.patch
 # Workaround for clang producing __mulodi4 calls
-Patch5:		db-sql-18.1.25-arm-clang-buildfix.patch
+#Patch5:		db-sql-18.1.25-arm-clang-buildfix.patch
 # ubuntu patches
 Patch102:	006-mutex_alignment.patch
 
@@ -254,8 +254,9 @@ cd dist
 ./s_config
 
 %build
-# fails to build in i586
-%ifarch %ix86
+# fails to build in ix86 and arm32
+# with clang 7.0.1, db 18.1.25
+%ifarch %ix86 %{arm}
 export CC=gcc
 export CXX=g++
 %endif
