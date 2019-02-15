@@ -63,6 +63,7 @@ BuildRequires:	java-rpmbuild
 BuildRequires:	java-devel
 BuildRequires:	sharutils
 %endif
+BuildRequires:	binutils
 
 %description
 The Berkeley Database (Berkeley DB) is a programmatic toolkit that provides
