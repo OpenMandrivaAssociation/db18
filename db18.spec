@@ -1,6 +1,5 @@
-%define version 6.2.32
-%define api %(echo %{version}|cut -d. -f1,2)
-%define shortapi %(echo %{version}|cut -d. -f1,1)
+%define api %(echo %{version}|cut -d. -f1-2)
+%define shortapi %(echo %{version}|cut -d. -f1)
 %define binext	%(echo %{api} | sed -e 's|\\.||g')
 %define sname	db
 
@@ -31,17 +30,18 @@
 
 Summary:	The Berkeley DB database library for C
 Name:		%{sname}%{binext}
-Version:	6.2.32
-Release:	3
+Version:	18.1.25
+Release:	1
 License:	BSD
 Group:		System/Libraries
 Url:		http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index.html
-Source0:	http://download.oracle.com/berkeley-db/db-%{version}.tar.gz
+Source0:	http://download.oracle.com/otn/berkeley-db/db-%{version}.tar.gz
 # statically link db1 library
 Patch0:		db-5.1.19-db185.patch
 Patch1:		db-5.1.25-sql_flags.patch
 Patch2:		db-5.1.19-tcl-link.patch
 Patch3:		arm-thumb-mutex_db5.patch
+Patch4:		db-18.1.25-openssl-1.1.patch
 # ubuntu patches
 Patch102:	006-mutex_alignment.patch
 
@@ -155,9 +155,6 @@ Requires:	%{libdbjava} = %{EVRD}
 Requires:	%{libdbcxx} = %{EVRD}
 Provides:	%{name}-devel = %{EVRD}
 Provides:	%{sname}-devel = %{EVRD}
-# MD remove the following line if there is a newer fork of the same api
-# ie: this is 6.0 and there is a fork of 6.1 or 6.2....
-Provides:	%{sname}%{shortapi}-devel = %{EVRD}
 
 %description -n	%{devname}
 This package contains the header files, libraries, and documentation for
@@ -198,7 +195,6 @@ modules which use Berkeley DB.
 %setup -qn %{sname}-%{version}
 # fix strange attribs
 find . -type f -perm 0444 -exec chmod 644 {} \;
-rm -r lang/sql/jdbc/doc
 %apply_patches
 
 # copy modern config.* files to target
@@ -527,20 +523,20 @@ mv %{buildroot}%{_bindir}/{dbsql,db%{api}_sql}
 %endif
 %{_includedir}/db.h
 %{_libdir}/libdb.so
-%{_libdir}/libdb-6.so
+%{_libdir}/libdb-%{shortapi}.so
 %{_libdir}/libdb_cxx.so
-%{_libdir}/libdb_cxx-6.so
+%{_libdir}/libdb_cxx-%{shortapi}.so
 %if %{with sql}
 %{_libdir}/libdb_sql.so
-%{_libdir}/libdb_sql-6.so
+%{_libdir}/libdb_sql-%{shortapi}.so
 %endif
 %if %{with tcl}
 %{_libdir}/libdb_tcl.so
-%{_libdir}/libdb_tcl-6.so
+%{_libdir}/libdb_tcl-%{shortapi}.so
 %endif
 %if %{with java}
 %{_libdir}/libdb_java.so
-%{_libdir}/libdb_java-6.so
+%{_libdir}/libdb_java-%{shortapi}.so
 %endif
 
 %files -n %{statname}
@@ -557,7 +553,7 @@ mv %{buildroot}%{_bindir}/{dbsql,db%{api}_sql}
 %{_includedir}/db_nss/db_185.h
 %endif
 %{_libdir}/libdb_nss.so
-%{_libdir}/libdb_nss-6.so
+%{_libdir}/libdb_nss-%{shortapi}.so
 %{_libdir}/libdb_nss-%{api}.so
 %endif
 
