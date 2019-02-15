@@ -1,0 +1,106 @@
+diff -up db-18.1.25/lang/sql/generated/sqlite3.c.omv~ db-18.1.25/lang/sql/generated/sqlite3.c
+--- db-18.1.25/lang/sql/generated/sqlite3.c.omv~	2019-02-15 13:01:04.592409289 +0100
++++ db-18.1.25/lang/sql/generated/sqlite3.c	2019-02-15 13:01:31.004775551 +0100
+@@ -194006,3 +194006,49 @@ done_no_trans:
+ #endif /* SQLITE_USER_AUTHENTICATION */
+ 
+ /************** End of userauth.c ********************************************/
++
++#ifdef __arm__
++// __mulodi4 is injected by clang, but not exported by libgcc, so let's
++// inject a variant of its definition here.
++// based on
++// https://llvm.org/svn/llvm-project/compiler-rt/branches/release_80/lib/builtins/mulodi4.c
++// with internal data types removed.
++__attribute__((visibility("default"))) long long
++__mulodi4(long long a, long long b, int* overflow)
++{
++  const int N = (int)(sizeof(long long) * 8 /*CHAR_BIT*/);
++  const long long MIN = (long long)1 << (N-1);
++  const long long MAX = ~MIN;
++  *overflow = 0; 
++  const long long result = a * b;
++  if (a == MIN)
++  {
++    if (b != 0 && b != 1)
++      *overflow = 1;
++    return result;
++  }
++  if (b == MIN)
++  {
++    if (a != 0 && a != 1)
++      *overflow = 1;
++    return result;
++  }
++  const long long sa = a >> (N - 1);
++  const long long abs_a = (a ^ sa) - sa;
++  const long long sb = b >> (N - 1);
++  const long long abs_b = (b ^ sb) - sb;
++  if (abs_a < 2 || abs_b < 2)
++    return result;
++  if (sa == sb)
++  {
++    if (abs_a > MAX / abs_b)
++      *overflow = 1;
++  }
++  else
++  {
++    if (abs_a > MIN / -abs_b)
++      *overflow = 1;
++  }
++  return result;
++}
++#endif
+diff -up db-18.1.25/lang/sql/sqlite/src/vdbe.c.omv~ db-18.1.25/lang/sql/sqlite/src/vdbe.c
+--- db-18.1.25/lang/sql/sqlite/src/vdbe.c.omv~	2019-02-15 06:47:06.646310037 +0100
++++ db-18.1.25/lang/sql/sqlite/src/vdbe.c	2019-02-15 06:48:47.234870175 +0100
+@@ -7208,3 +7208,49 @@ abort_due_to_interrupt:
+   sqlite3VdbeError(p, "%s", sqlite3ErrStr(rc));
+   goto abort_due_to_error;
+ }
++
++#ifdef __arm__
++// __mulodi4 is injected by clang, but not exported by libgcc, so let's
++// inject a variant of its definition here.
++// based on
++// https://llvm.org/svn/llvm-project/compiler-rt/branches/release_80/lib/builtins/mulodi4.c
++// with internal data types removed.
++long long
++__mulodi4(long long a, long long b, int* overflow)
++{
++  const int N = (int)(sizeof(long long) * 8 /*CHAR_BIT*/);
++  const long long MIN = (long long)1 << (N-1);
++  const long long MAX = ~MIN;
++  *overflow = 0; 
++  const long long result = a * b;
++  if (a == MIN)
++  {
++    if (b != 0 && b != 1)
++      *overflow = 1;
++    return result;
++  }
++  if (b == MIN)
++  {
++    if (a != 0 && a != 1)
++      *overflow = 1;
++    return result;
++  }
++  const long long sa = a >> (N - 1);
++  const long long abs_a = (a ^ sa) - sa;
++  const long long sb = b >> (N - 1);
++  const long long abs_b = (b ^ sb) - sb;
++  if (abs_a < 2 || abs_b < 2)
++    return result;
++  if (sa == sb)
++  {
++    if (abs_a > MAX / abs_b)
++      *overflow = 1;
++  }
++  else
++  {
++    if (abs_a > MIN / -abs_b)
++      *overflow = 1;
++  }
++  return result;
++}
++#endif
