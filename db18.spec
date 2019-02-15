@@ -303,44 +303,50 @@ CONFIGURE_TOP="../dist" \
 %if %{with asmmutex}
 %ifarch %{ix86}
 	--disable-posixmutexes \
-	--with-mutex=x86/gcc-assembly
+	--with-mutex=x86/gcc-assembly \
 %endif
 %ifarch %{x86_64}
 	--disable-posixmutexes \
-	--with-mutex=x86_64/gcc-assembly
+	--with-mutex=x86_64/gcc-assembly \
 %endif
 %ifarch alpha
 	--disable-posixmutexes \
-	--with-mutex=ALPHA/gcc-assembly
+	--with-mutex=ALPHA/gcc-assembly \
 %endif
 %ifarch ia64
 	--disable-posixmutexes \
-	--with-mutex=ia64/gcc-assembly
+	--with-mutex=ia64/gcc-assembly \
 %endif
 %ifarch ppc
 	--disable-posixmutexes \
-	--with-mutex=PPC/gcc-assembly
+	--with-mutex=PPC/gcc-assembly \
 %endif
 %ifarch %{sparc}
 	--disable-posixmutexes \
-	--with-mutex=Sparc/gcc-assembly
+	--with-mutex=Sparc/gcc-assembly \
 %endif
 %ifarch %{mips}
 	--disable-posixmutexes \
-	--with-mutex=MIPS/gcc-assembly
+	--with-mutex=MIPS/gcc-assembly \
 %endif
 %ifarch %{arm}
 	--disable-posixmutexes \
-	--with-mutex=ARM/gcc-assembly
+	--with-mutex=ARM/gcc-assembly \
 %endif
 %ifarch %{armx}
 	--disable-posixmutexes \
-	--with-mutex=ARM64/gcc-assembly
+	--with-mutex=ARM64/gcc-assembly \
 %endif
 %else
 	--enable-posixmutexes \
-	--with-mutex=POSIX/pthreads/library
+	--with-mutex=POSIX/pthreads/library \
 %endif
+	|| :
+if ! [ -e Makefile ]; then
+	echo config.log:
+	cat config.log
+	exit 1
+fi
 
 %make $JAVA_MAKE
 %if %{with java}
@@ -371,40 +377,46 @@ CONFIGURE_TOP="../dist" \
 %if %{with asmmutex}
 %ifarch %{ix86}
 	--disable-posixmutexes \
-	--with-mutex=x86/gcc-assembly
+	--with-mutex=x86/gcc-assembly \
 %endif
 %ifarch x86_64
 	--disable-posixmutexes \
-	--with-mutex=x86_64/gcc-assembly
+	--with-mutex=x86_64/gcc-assembly \
 %endif
 %ifarch alpha
 	--disable-posixmutexes \
-	--with-mutex=ALPHA/gcc-assembly
+	--with-mutex=ALPHA/gcc-assembly \
 %endif
 %ifarch ia64
 	--disable-posixmutexes \
-	--with-mutex=ia64/gcc-assembly
+	--with-mutex=ia64/gcc-assembly \
 %endif
 %ifarch ppc
 	--disable-posixmutexes \
-	--with-mutex=PPC/gcc-assembly
+	--with-mutex=PPC/gcc-assembly \
 %endif
 %ifarch %{sparc}
 	--disable-posixmutexes \
-	--with-mutex=Sparc/gcc-assembly
+	--with-mutex=Sparc/gcc-assembly \
 %endif
 %ifarch %{mips}
 	--disable-posixmutexes \
-	--with-mutex=MIPS/gcc-assembly
+	--with-mutex=MIPS/gcc-assembly \
 %endif
 %ifarch %{arm}
 	--disable-posixmutexes \
-	--with-mutex=ARM/gcc-assembly
+	--with-mutex=ARM/gcc-assembly \
 %endif
 %else
 	--enable-posixmutexes \
-	--with-mutex=POSIX/pthreads/library
+	--with-mutex=POSIX/pthreads/library \
 %endif
+	|| :
+if ! [ -e Makefile ]; then
+	echo config.log:
+	cat config.log
+	exit 1
+fi
 
 %make libdb_base=libdb_nss libso_target=libdb_nss-%{api}.la libdir=/%{_lib}
 popd
