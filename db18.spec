@@ -155,6 +155,8 @@ Requires:	%{libdbjava} = %{EVRD}
 Requires:	%{libdbcxx} = %{EVRD}
 Provides:	%{name}-devel = %{EVRD}
 Provides:	%{sname}-devel = %{EVRD}
+Provides:	db18.1-devel = %{EVRD}
+Provides:	db18-devel = %{EVRD}
 
 %description -n	%{devname}
 This package contains the header files, libraries, and documentation for
