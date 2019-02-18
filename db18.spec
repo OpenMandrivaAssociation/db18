@@ -31,7 +31,7 @@
 Summary:	The Berkeley DB database library for C
 Name:		%{sname}%{binext}
 Version:	18.1.25
-Release:	1
+Release:	2
 License:	AGPL
 Group:		System/Libraries
 Url:		http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index.html
@@ -160,6 +160,9 @@ Provides:	%{name}-devel = %{EVRD}
 Provides:	%{sname}-devel = %{EVRD}
 Provides:	db18.1-devel = %{EVRD}
 Provides:	db18-devel = %{EVRD}
+# MD remove the following line if there is a newer fork of the same api
+# ie: this is 6.0 and there is a fork of 6.1 or 6.2....
+Provides:	%{sname}%{shortapi}-devel = %{EVRD}
 
 %description -n	%{devname}
 This package contains the header files, libraries, and documentation for
