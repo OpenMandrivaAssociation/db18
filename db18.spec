@@ -30,8 +30,8 @@
 
 Summary:	The Berkeley DB database library for C
 Name:		%{sname}%{binext}
-Version:	18.1.25
-Release:	2
+Version:	18.1.32
+Release:	1
 License:	AGPL
 Group:		System/Libraries
 Url:		http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index.html
@@ -41,7 +41,6 @@ Patch0:		db-5.1.19-db185.patch
 Patch1:		db-5.1.25-sql_flags.patch
 Patch2:		db-5.1.19-tcl-link.patch
 Patch3:		arm-thumb-mutex_db5.patch
-Patch4:		db-18.1.25-openssl-1.1.patch
 # Workaround for clang producing __mulodi4 calls
 #Patch5:		db-sql-18.1.25-arm-clang-buildfix.patch
 # ubuntu patches
