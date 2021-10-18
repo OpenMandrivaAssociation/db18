@@ -1,26 +1,26 @@
 %define api %(echo %{version}|cut -d. -f1-2)
 %define shortapi %(echo %{version}|cut -d. -f1)
-%define binext	%(echo %{api} | sed -e 's|\\.||g')
-%define sname	db
+%define binext %(echo %{api} | sed -e 's|\\.||g')
+%define sname db
 
-%define libname		%mklibname %{sname} %{api}
-%define devname		%mklibname %{sname} %{api} -d
-%define statname	%mklibname %{sname} %{api} -s -d
+%define libname %mklibname %{sname} %{api}
+%define devname %mklibname %{sname} %{api} -d
+%define statname %mklibname %{sname} %{api} -s -d
 
-%define libdbcxx	%mklibname %{sname}cxx %{api}
-%define libdbsql	%mklibname %{sname}sql %{api}
-%define libdbtcl	%mklibname %{sname}tcl %{api}
-%define libdbjava	%mklibname %{sname}java %{api}
+%define libdbcxx %mklibname %{sname}cxx %{api}
+%define libdbsql %mklibname %{sname}sql %{api}
+%define libdbtcl %mklibname %{sname}tcl %{api}
+%define libdbjava %mklibname %{sname}java %{api}
 
-%define libdbnss	%mklibname %{sname}nss %{api}
-%define devdbnss	%mklibname %{sname}nss %{api} -d
+%define libdbnss %mklibname %{sname}nss %{api}
+%define devdbnss %mklibname %{sname}nss %{api} -d
 
 %bcond_with java
 %bcond_without sql
 %bcond_with tcl
 %bcond_without db1
 # Define to build a stripped down version to use for nss libraries
-%bcond_with	 nss
+%bcond_with nss
 
 # Define to rename utilities and allow parallel installation
 %bcond_without parallel
@@ -29,9 +29,9 @@
 %bcond_with asmmutex
 
 Summary:	The Berkeley DB database library for C
-Name:		%{sname}%{binext}
 Version:	18.1.32
-Release:	1
+Name:		%{sname}%{binext}
+Release:	2
 License:	AGPL
 Group:		System/Libraries
 Url:		http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index.html
@@ -70,41 +70,41 @@ embedded database support for both traditional and client/server applications.
 Berkeley DB is used by many applications, including Python and Perl, so this
 should be installed on all systems.
 
-%package -n	%{libname}
+%package -n %{libname}
 Summary:	The Berkeley DB database library for C
 Group:		System/Libraries
 
-%description -n	%{libname}
+%description -n %{libname}
 This package contains the shared library required by Berkeley DB.
 
-%package -n	%{libdbcxx}
+%package -n %{libdbcxx}
 Summary:	The Berkeley DB database library for C++
 Group:		System/Libraries
 
-%description -n	%{libdbcxx}
+%description -n %{libdbcxx}
 This package contains the files needed to build C++ programs which use
 Berkeley DB.
 
 %if %{with sql}
-%package -n	%{libdbsql}
+%package -n %{libdbsql}
 Summary:	The Berkeley DB database library for SQL
 Group:		System/Libraries
 
-%description -n	%{libdbsql}
+%description -n %{libdbsql}
 This package contains the files needed to build SQL programs which use
 Berkeley DB.
 %endif
 
 %if %{with java}
-%package -n	%{libdbjava}
+%package -n %{libdbjava}
 Summary:	The Berkeley DB database library for C++
 Group:		System/Libraries
 
-%description -n	%{libdbjava}
+%description -n %{libdbjava}
 This package contains the files needed to build Java programs which use
 Berkeley DB.
 
-%package -n	%{libdbjava}-javadoc
+%package -n %{libdbjava}-javadoc
 Summary:	Javadoc for %{name}
 Group:		Development/Java
 
@@ -113,11 +113,11 @@ Javadoc for %{name}.
 %endif
 
 %if %{with tcl}
-%package -n	%{libdbtcl}
+%package -n %{libdbtcl}
 Summary:	The Berkeley DB database library for TCL
 Group:		System/Libraries
 
-%description -n	%{libdbtcl}
+%description -n %{libdbtcl}
 This package contains the header files, libraries, and documentation for
 building tcl programs which use Berkeley DB.
 %endif
@@ -130,18 +130,18 @@ Conflicts:	db-utils < %{api}
 %endif
 Requires:	%{name}_recover = %{EVRD}
 
-%description	utils
+%description utils
 This package contains command line tools for managing Berkeley DB databases.
 
-%package -n	%{name}_recover
+%package -n %{name}_recover
 Summary:	Minimal package with '%{name}_recover' only
 Group:		Databases
 
-%description -n	%{name}_recover
+%description -n %{name}_recover
 This is a minimal package that ships with '%{name}_recover' only as it's
 required for using "RPM ACID".
 
-%package -n	%{devname}
+%package -n %{devname}
 Summary:	Development libraries/header files for the Berkeley DB library
 Group:		Development/Databases
 Requires:	%{libname} = %{EVRD}
@@ -163,37 +163,37 @@ Provides:	db18-devel = %{EVRD}
 # ie: this is 6.0 and there is a fork of 6.1 or 6.2....
 Provides:	%{sname}%{shortapi}-devel = %{EVRD}
 
-%description -n	%{devname}
+%description -n %{devname}
 This package contains the header files, libraries, and documentation for
 building programs which use Berkeley DB.
 
-%package -n	%{statname}
+%package -n %{statname}
 Summary:	Development static libraries files for the Berkeley DB library
 Group:		Development/Databases
 Requires:	%{devname} = %{EVRD}
 Provides:	%{name}-static-devel = %{EVRD}
 
-%description -n	%{statname}
+%description -n %{statname}
 This package contains the static libraries for building programs which
 use Berkeley DB.
 
 %if %{with nss}
-%package -n	%{libdbnss}
+%package -n %{libdbnss}
 Summary:	The Berkeley DB database library for NSS modules
 Group:		System/Libraries
 
-%description -n	%{libdbnss}
+%description -n %{libdbnss}
 This package contains the shared library required by some nss modules
 that use Berkeley DB.
 
-%package -n	%{devdbnss}
+%package -n %{devdbnss}
 Summary:	Development libraries/header files for building nss modules with Berkeley DB
 Group:		Development/Databases
 Requires:	%{libdbnss} = %{EVRD}
 Provides:	dbnss%{binext}-devel = %{EVRD}
 Provides:	db_nss%{binext}-devel = %{EVRD}
 
-%description -n	%{devdbnss}
+%description -n %{devdbnss}
 This package contains the header files and libraries for building nss
 modules which use Berkeley DB.
 %endif
@@ -206,15 +206,14 @@ find . -type f -perm 0444 -exec chmod 644 {} \;
 
 # copy modern config.* files to target
 for f in config.guess config.sub ; do
-        test -f /usr/share/libtool/config/$f || continue
-        find . -type f -name $f -exec cp /usr/share/libtool/config/$f \{\} \;
+    test -f /usr/share/libtool/config/$f || continue
+    find . -type f -name $f -exec cp /usr/share/libtool/config/$f \{\} \;
 done
 
-
-pushd dist
+cd dist
 libtoolize --copy --force
 cat %{_datadir}/aclocal/libtool.m4 >> aclocal.m4
-popd
+cd -
 
 # Remove tags files which we don't need.
 find . -name tags | xargs rm -f
@@ -248,10 +247,10 @@ fixup_href() {
     done
 }
 
-set +x	# XXX painful to watch
+set +x # XXX painful to watch
 # Fix all of the HTML files.
-fixup_href `find . -name "*.html"`
-set -x	# XXX painful to watch
+fixup_href $(find . -name "*.html")
+set -x # XXX painful to watch
 
 cd dist
 ./s_config
@@ -259,7 +258,7 @@ cd dist
 %build
 # fails to build in ix86 and arm32
 # with clang 7.0.1, db 18.1.25
-%ifarch %ix86 %{arm}
+%ifarch %{ix86} %{arm}
 export CC=gcc
 export CXX=g++
 %endif
@@ -270,7 +269,7 @@ CFLAGS="$CFLAGS -D_GNU_SOURCE -D_REENTRANT"
 export CFLAGS
 
 %ifnarch %{arm}
-%global ldflags %{ldflags} -fuse-ld=bfd
+%global build_ldflags %{build_ldflags} -fuse-ld=bfd
 %endif
 
 %if %{with java}
@@ -281,7 +280,7 @@ export JAVA=%{java}
 export JAVACFLAGS="-nowarn"
 #JAVA_MAKE="JAR=%{jar} JAVAC=%{javac} JAVACFLAGS="-nowarn" JAVA=%{java}"
 %endif
-pushd build_unix
+cd build_unix
 CONFIGURE_TOP="../dist" \
 %configure \
 	--includedir=%{_includedir}/%{name} \
@@ -297,7 +296,8 @@ CONFIGURE_TOP="../dist" \
 	--enable-dump185 \
 %endif
 %if %{with tcl}
-	--enable-tcl --with-tcl=%{_libdir} --enable-test \
+	--enable-tcl \
+	--with-tcl=%{_libdir} --enable-test \
 %endif
 	--enable-cxx \
 %if %{with java}
@@ -353,14 +353,15 @@ fi
 
 %make $JAVA_MAKE
 %if %{with java}
-pushd ../lang/java
-%{javadoc} -d ../sql/jdbc/doc `find . -name '*.java'`
-popd
+cd ../lang/java
+%{javadoc} -d ../sql/jdbc/doc $(find . -name '*.java')
+cd -
 %endif
-popd
+cd -
+
 %if %{with nss}
 mkdir build_nss
-pushd build_nss
+cd build_nss
 CONFIGURE_TOP="../dist" \
 %configure \
 	--includedir=%{_includedir}/db_nss \
@@ -421,8 +422,8 @@ if ! [ -e Makefile ]; then
 	exit 1
 fi
 
-%make libdb_base=libdb_nss libso_target=libdb_nss-%{api}.la libdir=/%{_lib}
-popd
+%make_build libdb_base=libdb_nss libso_target=libdb_nss-%{api}.la libdir=/%{_lib}
+cd -
 %endif
 
 %install
@@ -443,7 +444,7 @@ ln -sf %{name}/db.h %{buildroot}%{_includedir}/db.h
 # XXX This is needed for parallel install with db4.2
 %if %{with parallel}
 for F in %{buildroot}%{_bindir}/*db_* ; do
-	mv $F `echo $F | sed -e 's,db_,%{name}_,'`
+    mv $F $(echo $F | sed -e 's,db_,%{name}_,')
 done
 %endif
 
@@ -576,4 +577,3 @@ mv %{buildroot}%{_bindir}/{dbsql,db%{api}_sql}
 %{_libdir}/libdb_nss-%{shortapi}.so
 %{_libdir}/libdb_nss-%{api}.so
 %endif
-
