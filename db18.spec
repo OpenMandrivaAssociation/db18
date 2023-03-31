@@ -31,7 +31,7 @@
 Summary:	The Berkeley DB database library for C
 Version:	18.1.32
 Name:		%{sname}%{binext}
-Release:	2
+Release:	3
 License:	AGPL
 Group:		System/Libraries
 Url:		http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index.html
