@@ -1,0 +1,11 @@
+diff -up db-18.1.40/util/db_dump185.c.omv~ db-18.1.40/util/db_dump185.c
+--- db-18.1.40/util/db_dump185.c.omv~	2023-10-22 21:39:45.947581776 +0200
++++ db-18.1.40/util/db_dump185.c	2023-10-22 21:39:52.021645551 +0200
+@@ -19,6 +19,7 @@ static const char copyright[] =
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <getopt.h>
+ 
+ #ifdef HAVE_DB_185_H
+ #include <db_185.h>

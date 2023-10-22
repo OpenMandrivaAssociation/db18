@@ -1,3 +1,5 @@
+%global optflags %{optflags} -fPIC
+
 %define api %(echo %{version}|cut -d. -f1-2)
 %define shortapi %(echo %{version}|cut -d. -f1)
 %define binext %(echo %{api} | sed -e 's|\\.||g')
@@ -8,15 +10,16 @@
 %define statname %mklibname %{sname} %{api} -s -d
 
 %define libdbcxx %mklibname %{sname}cxx %{api}
-%define libdbsql %mklibname %{sname}sql %{api}
 %define libdbtcl %mklibname %{sname}tcl %{api}
 %define libdbjava %mklibname %{sname}java %{api}
 
 %define libdbnss %mklibname %{sname}nss %{api}
 %define devdbnss %mklibname %{sname}nss %{api} -d
 
+# Dropped in 18.1.40
+%define libdbsql %mklibname %{sname}sql %{api}
+
 %bcond_with java
-%bcond_without sql
 %bcond_with tcl
 %bcond_without db1
 # Define to build a stripped down version to use for nss libraries
@@ -29,18 +32,19 @@
 %bcond_with asmmutex
 
 Summary:	The Berkeley DB database library for C
-Version:	18.1.32
+Version:	18.1.40
 Name:		%{sname}%{binext}
-Release:	3
+Release:	1
 License:	AGPL
 Group:		System/Libraries
 Url:		http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index.html
-Source0:	http://download.oracle.com/otn/berkeley-db/db-%{version}.tar.gz
+Source0:	https://github.com/yasuhirokimura/db18/releases/download/%{version}/db-%{version}.tar.gz
 # statically link db1 library
 Patch0:		db-5.1.19-db185.patch
 Patch1:		db-5.1.25-sql_flags.patch
 Patch2:		db-5.1.19-tcl-link.patch
 Patch3:		arm-thumb-mutex_db5.patch
+Patch4:		db-18.1.40-compile.patch
 # Workaround for clang producing __mulodi4 calls
 #Patch5:		db-sql-18.1.25-arm-clang-buildfix.patch
 # ubuntu patches
@@ -48,9 +52,6 @@ Patch102:	006-mutex_alignment.patch
 
 BuildRequires:	ed
 BuildRequires:	libtool
-%if %{with sql}
-BuildRequires:	pkgconfig(sqlite3)
-%endif
 %if %{with tcl}
 BuildRequires:	pkgconfig(tcl)
 %endif
@@ -73,6 +74,7 @@ should be installed on all systems.
 %package -n %{libname}
 Summary:	The Berkeley DB database library for C
 Group:		System/Libraries
+Obsoletes:	%{libdbsql} < %{EVRD}
 
 %description -n %{libname}
 This package contains the shared library required by Berkeley DB.
@@ -84,16 +86,6 @@ Group:		System/Libraries
 %description -n %{libdbcxx}
 This package contains the files needed to build C++ programs which use
 Berkeley DB.
-
-%if %{with sql}
-%package -n %{libdbsql}
-Summary:	The Berkeley DB database library for SQL
-Group:		System/Libraries
-
-%description -n %{libdbsql}
-This package contains the files needed to build SQL programs which use
-Berkeley DB.
-%endif
 
 %if %{with java}
 %package -n %{libdbjava}
@@ -145,9 +137,6 @@ required for using "RPM ACID".
 Summary:	Development libraries/header files for the Berkeley DB library
 Group:		Development/Databases
 Requires:	%{libname} = %{EVRD}
-%if %{with sql}
-Requires:	%{libdbsql} = %{EVRD}
-%endif
 %if %{with tcl}
 Requires:	%{libdbtcl} = %{EVRD}
 %endif
@@ -288,9 +277,6 @@ CONFIGURE_TOP="../dist" \
 	--enable-static \
 	--enable-dbm \
 	--enable-o_direct \
-%if %{with sql}
-	--enable-sql \
-%endif
 %if %{with db1}
 	--enable-compat185 \
 	--enable-dump185 \
@@ -462,21 +448,12 @@ ln -s db%{api}-%{version} %{buildroot}%{_javadocdir}/db%{api}
 
 rm -rf %{buildroot}%{_includedir}/db_nss/db_cxx.h
 
-%if %{with sql}
-mv %{buildroot}%{_bindir}/{dbsql,db%{api}_sql}
-%endif
-
 %files -n %{libname}
 %doc LICENSE README
 %{_libdir}/libdb-%{api}.so
 
 %files -n %{libdbcxx}
 %{_libdir}/libdb_cxx-%{api}.so
-
-%if %{with sql}
-%files -n %{libdbsql}
-%{_libdir}/libdb_sql-%{api}.so
-%endif
 
 %if %{with java}
 %files -n %{libdbjava}
@@ -522,10 +499,6 @@ mv %{buildroot}%{_bindir}/{dbsql,db%{api}_sql}
 %{_bindir}/%{name}_tuner
 %{_bindir}/%{name}_upgrade
 %{_bindir}/%{name}_verify
-%if %{with sql}
-%doc docs/api_reference/C/dbsql.html
-%{_bindir}/db%{api}_sql
-%endif
 
 %files -n %{name}_recover
 %doc docs/api_reference/C/db_recover.html
@@ -539,18 +512,11 @@ mv %{buildroot}%{_bindir}/{dbsql,db%{api}_sql}
 %{_includedir}/%{name}/db_185.h
 %endif
 %{_includedir}/%{name}/db_cxx.h
-%if %{with sql}
-%{_includedir}/%{name}/dbsql.h
-%endif
 %{_includedir}/db.h
 %{_libdir}/libdb.so
 %{_libdir}/libdb-%{shortapi}.so
 %{_libdir}/libdb_cxx.so
 %{_libdir}/libdb_cxx-%{shortapi}.so
-%if %{with sql}
-%{_libdir}/libdb_sql.so
-%{_libdir}/libdb_sql-%{shortapi}.so
-%endif
 %if %{with tcl}
 %{_libdir}/libdb_tcl.so
 %{_libdir}/libdb_tcl-%{shortapi}.so
