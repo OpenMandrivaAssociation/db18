@@ -2,7 +2,7 @@
 
 %define api %(echo %{version}|cut -d. -f1-2)
 %define shortapi %(echo %{version}|cut -d. -f1)
-%define binext %(echo %{api} | sed -e 's|\\.||g')
+%define binext %{shortapi}
 %define sname db
 
 %define libname %mklibname %{sname} %{api}
@@ -34,7 +34,7 @@
 Summary:	The Berkeley DB database library for C
 Version:	18.1.40
 Name:		%{sname}%{binext}
-Release:	1
+Release:	2
 License:	AGPL
 Group:		System/Libraries
 Url:		http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index.html
