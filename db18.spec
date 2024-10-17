@@ -37,7 +37,7 @@ Name:		%{sname}%{binext}
 Release:	2
 License:	AGPL
 Group:		System/Libraries
-Url:		http://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index.html
+Url:		https://www.oracle.com/technetwork/database/database-technologies/berkeleydb/downloads/index.html
 Source0:	https://github.com/yasuhirokimura/db18/releases/download/%{version}/db-%{version}.tar.gz
 # statically link db1 library
 Patch0:		db-5.1.19-db185.patch
