@@ -50,6 +50,11 @@ Patch4:		db-18.1.40-compile.patch
 # ubuntu patches
 Patch102:	006-mutex_alignment.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	ed
 BuildRequires:	libtool
 %if %{with tcl}
